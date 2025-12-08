@@ -1,2 +1,2 @@
-export { KanbanBoard } from './kanban-board';
+export { BoardContent } from './Board.tsx';
 

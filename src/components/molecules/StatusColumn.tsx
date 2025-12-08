@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { TaskCard } from "../task-card";
-import { AddTaskForm } from "../add-task-form";
-import { Button } from "../../atoms/button/Button.tsx";
-import { Icon } from "../../atoms/icon";
-import type { Task } from "../../../types/kanban";
+import { TaskCard } from "./index.ts";
+import { AddTaskForm } from "./AddTaskForm.tsx";
+import { Button } from "../atoms";
+import { Icon } from "../atoms";
+import type { Task } from "../../types/kanban.ts";
 
 type ColumnProps = {
     id: string;

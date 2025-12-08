@@ -1,6 +1,6 @@
-export { Button } from './button/Button.tsx';
-export { Card } from './card';
-export { Input } from './input';
-export { Badge } from './badge';
-export { Icon } from './icon';
+export { Button } from './Button.tsx';
+export { Card } from './Card.tsx';
+export { Input } from './Input.tsx';
+export { Badge } from './Badge.tsx';
+export { Icon } from './Icon.tsx';
 

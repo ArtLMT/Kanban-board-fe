@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import { Input } from "../../atoms";
-import { Button } from "../../atoms";
-import type { Task, Priority } from "../../../types/kanban";
+import { Input, Button } from "../atoms";
+import type { Task, Priority } from "../../types/kanban.ts";
 
 type AddTaskFormProps = {
     onAddTask: (task: Task) => void;

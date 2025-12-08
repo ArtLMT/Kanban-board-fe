@@ -1,8 +1,7 @@
-import { KanbanBoard } from './components/organisms';
-
+import { KanbanPage } from './pages/KanbanPage';
 function App() {
     return (
-        <KanbanBoard />
+        <KanbanPage />
     );
 }
 

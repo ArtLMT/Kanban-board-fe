@@ -1,8 +1,5 @@
-import type { Task, Priority } from "../../../types/kanban";
-import { Card } from "../../atoms/card";
-import { Button } from "../../atoms/button/Button.tsx";
-import { Badge } from "../../atoms/badge";
-import { Icon } from "../../atoms/icon";
+import type { Task, Priority } from "../../types/kanban.ts";
+import { Button, Card, Badge, Icon } from "../atoms";
 
 type TaskCardProps = {
     task: Task;

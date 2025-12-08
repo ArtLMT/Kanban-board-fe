@@ -1,7 +1,7 @@
 import React from "react";
 
 type IconProps = React.SVGAttributes<SVGSVGElement> & {
-    name: 'trash' | 'edit' | 'plus' | 'close' | 'drag' | 'check';
+    name: 'trash' | 'edit' | 'plus' | 'close' | 'drag' | 'check' | 'inbox' | 'x' | 'menu';
     size?: 'sm' | 'md' | 'lg';
 };
 
@@ -60,6 +60,30 @@ const iconPaths = {
             strokeLinejoin="round"
             strokeWidth={2}
             d="M5 13l4 4L19 7"
+        />
+    ),
+    inbox: (
+        <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
+        />
+    ),
+    x: (
+        <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M6 18L18 6M6 6l12 12"
+        />
+    ),
+    menu: (
+        <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M4 6h16M4 12h16M4 18h16"
         />
     )
 };

@@ -17,3 +17,10 @@ export interface Column {
 
 export type ColumnStatus = 'todo' | 'inprogress' | 'review' | 'done';
 
+export interface Board {
+    id: string;
+    title: string;
+    columns: Column[];
+    createdAt?: Date;
+}
+
