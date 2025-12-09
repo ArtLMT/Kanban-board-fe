@@ -1,5 +1,5 @@
 
-import type { Board, Column, Task } from "../types/kanban";
+import type { Board, Column} from "../types/kanban";
 
 const defaultColumns: Omit<Column, 'id'>[] = [
     { title: "To Do", tasks: [] },
@@ -7,7 +7,8 @@ const defaultColumns: Omit<Column, 'id'>[] = [
     { title: "Done", tasks: [] },
 ];
 
-export const createDefaultBoard = (title: string, boardId: string): Board => {
+export const createDefaultBoard = (title: string, customId?: string): Board => {
+    const boardId = customId || Date.now().toString();
     return {
         id: boardId,
         title,
@@ -30,36 +31,40 @@ export const mockBoards: Board[] = [
     createDefaultBoard("Personal Tasks","2"),
 ];
 
-// Initialize with sample tasks
-mockBoards[0].columns[0].tasks = [
-    {
-        id: "t1",
-        title: "Design landing page",
-        description: "Create wireframe and UI",
-        priority: "high",
-    },
-];
+if (mockBoards[0] && mockBoards[0].columns.length >= 3) {
+    mockBoards[0].columns[0].tasks = [
+        {
+            id: "t1",
+            title: "Design landing page",
+            description: "Create wireframe and UI",
+            priority: "high",
+        },
+    ];
 
-mockBoards[0].columns[1].tasks = [
-    {
-        id: "t2",
-        title: "Build Kanban UI",
-        priority: "medium",
-    },
-];
+    mockBoards[0].columns[1].tasks = [
+        {
+            id: "t2",
+            title: "Build Kanban UI",
+            priority: "medium",
+        },
+    ];
 
-mockBoards[0].columns[2].tasks = [
-    {
-        id: "t3",
-        title: "Setup project",
-        priority: "low",
-    },
-];
+    mockBoards[0].columns[2].tasks = [
+        {
+            id: "t3",
+            title: "Setup project",
+            priority: "low",
+        },
+    ];
+}
 
-mockBoards[1].columns[0].tasks = [
-    {
-        id: "t4",
-        title: "Learn React DnD",
-        priority: "high",
-    },
-];
+// Board 2 (ID: "2")
+if (mockBoards[1] && mockBoards[1].columns.length >= 1) {
+    mockBoards[1].columns[0].tasks = [
+        {
+            id: "t4",
+            title: "Learn React DnD",
+            priority: "high",
+        },
+    ];
+}
