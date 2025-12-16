@@ -31,6 +31,24 @@ export const mockBoards: Board[] = [
     createDefaultBoard("Personal Tasks","2"),
 ];
 
+export interface MockUser {
+    id: string;
+    username: string;
+    email: string;
+    password: string; // plain text for mock only
+    boardIds: string[];
+}
+
+export const mockUsers: MockUser[] = [
+    {
+        id: "u1",
+        username: "john",
+        email: "lmt@test.com",
+        password: "Password123!",
+        boardIds: ["1", "2"],
+    },
+];
+
 if (mockBoards[0] && mockBoards[0].columns.length >= 3) {
     mockBoards[0].columns[0].tasks = [
         {

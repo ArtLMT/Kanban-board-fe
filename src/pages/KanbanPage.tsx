@@ -1,12 +1,17 @@
+import React from "react";
 import { ColumnManager, KanbanHeader, KanbanSidebar } from "../components/molecules";
 import { BoardContent } from "../components/organisms/";
 import { KanbanLayout } from "../components/templates/KanbanKayout.tsx";
 import { useKanban } from "../hooks/useKanban.ts";
 
-export const KanbanPage = () => {
+interface KanbanPageProps {
+    username: string;
+    onLogout?: () => void;
+}
+
+export const KanbanPage: React.FC<KanbanPageProps> = ({ username, onLogout }) => {
     const kanban = useKanban();
 
-    const username = "Lê Minh Thành";
 
     if (!kanban.currentBoard) {
         return <div>Board not found</div>;
@@ -40,6 +45,7 @@ export const KanbanPage = () => {
             totalTasks={totalTasks}
             onClearAllTasks={kanban.handleClearAllTasks}
             username={username}
+            onLogout={onLogout}
         />
     );
 
