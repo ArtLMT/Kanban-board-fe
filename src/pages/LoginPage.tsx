@@ -1,7 +1,7 @@
-import React from 'react';
-import { AuthenticateLayout } from '../components/templates/AuthenticateLayout';
-import { Input, Button } from '../components/atoms';
-import { useLogin } from '../hooks/useLogin';
+import React from "react";
+import { AuthenticateLayout } from "../components/templates/AuthenticateLayout";
+import { Input, Button } from "../components/atoms";
+import { useLogin } from "../hooks/useLogin";
 
 interface LoginPageProps {
     onSwitchToRegister?: () => void;
@@ -13,11 +13,11 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                                                         onLoginSuccess,
                                                     }) => {
     const {
-        email,
+        username,
         password,
         errors,
         isLoading,
-        setEmail,
+        setUsername,
         setPassword,
         setErrors,
         handleSubmit,
@@ -27,19 +27,19 @@ export const LoginPage: React.FC<LoginPageProps> = ({
         <AuthenticateLayout title="Login to Kanban Board">
             <form onSubmit={handleSubmit} className="space-y-6">
                 <Input
-                    type="email"
-                    placeholder="Enter your email"
-                    value={email}
+                    type="text"
+                    placeholder="Enter your username"
+                    value={username}
                     disabled={isLoading}
-                    error={errors.email}
+                    error={errors.username}
                     onChange={(e) => {
-                        setEmail(e.target.value);
-                        if (errors.email) {
-                            setErrors({ ...errors, email: undefined });
+                        setUsername(e.target.value);
+                        if (errors.username) {
+                            setErrors({ ...errors, username: undefined });
                         }
                     }}
                 >
-                    Email Address
+                    Username
                 </Input>
 
                 <Input
@@ -65,12 +65,12 @@ export const LoginPage: React.FC<LoginPageProps> = ({
                     className="w-full font-medium"
                     disabled={isLoading}
                 >
-                    {isLoading ? 'Logging in...' : 'Login'}
+                    {isLoading ? "Logging in..." : "Login"}
                 </Button>
 
                 <div className="text-center pt-2">
                     <p className="text-sm text-gray-600">
-                        Don&apos;t have an account?{' '}
+                        Don&apos;t have an account?{" "}
                         <button
                             type="button"
                             onClick={onSwitchToRegister}
