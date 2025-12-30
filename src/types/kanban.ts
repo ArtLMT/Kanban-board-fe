@@ -1,26 +1,11 @@
-export type Priority = 'low' | 'medium' | 'high';
+import type { Board } from "./board";
+import type { Status } from "./status";
+import type { Task } from "./task";
 
-export interface Task {
-    id: string;
-    title: string;
-    description?: string;
-    priority?: Priority;
-    createdAt?: Date;
-    dueDate?: Date;
-}
-
-export interface Column {
-    id: string;
-    title: string;
+export interface UIStatus extends Status {
     tasks: Task[];
 }
 
-export type ColumnStatus = 'todo' | 'inprogress' | 'review' | 'done';
-
-export interface Board {
-    id: string;
-    title: string;
-    columns: Column[];
-    createdAt?: Date;
+export interface UIBoard extends Board {
+    statuses: UIStatus[];
 }
-

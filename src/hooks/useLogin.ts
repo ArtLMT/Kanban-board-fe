@@ -1,5 +1,6 @@
-import { useState } from "react";
-import api from "../api/api.ts"; // your Axios instance
+import {useContext, useState} from "react";
+import {AuthContext} from "../context/AuthContext.tsx";
+import api from "../api/api.ts";
 
 interface UseLoginProps {
     onLoginSuccess?: (username: string) => void;
@@ -10,6 +11,8 @@ export const useLogin = ({ onLoginSuccess }: UseLoginProps) => {
     const [password, setPassword] = useState("");
     const [errors, setErrors] = useState<{ username?: string; password?: string }>({});
     const [isLoading, setIsLoading] = useState(false);
+    const { setUser } = useContext(AuthContext);
+
 
     // Simple validation
     const validateForm = () => {
@@ -35,14 +38,13 @@ export const useLogin = ({ onLoginSuccess }: UseLoginProps) => {
         setIsLoading(true);
 
         try {
-            // Call Spring Boot backend
-            const response = await api.post("/api/auth/login", { username, password });
+            await api.post("/api/auth/login", { username, password });
 
-            // Backend returns { accessToken, refreshToken, username }
-            const user = response.data;
+            // cookies are set → now ask backend who we are
+            const res = await api.get("/api/auth/me");
+            setUser(res.data);
 
-            onLoginSuccess?.(user.username);
-
+            onLoginSuccess?.(res.data.username);
             // Tokens are already in HttpOnly cookies from backend
         } catch (err: any) {
             console.error(err);
