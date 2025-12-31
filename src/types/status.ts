@@ -1,5 +1,3 @@
-import type { Board} from "./board.ts";
-
 export interface Status {
     id: number;
     name: string;
@@ -7,7 +5,7 @@ export interface Status {
 
     position: number;
 
-    board: Board;
+    boardId: number;
 }
 
 export interface CreateStatusRequest {

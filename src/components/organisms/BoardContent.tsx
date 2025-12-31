@@ -1,13 +1,12 @@
-import React from 'react';
-import { Column } from "../molecules";
+import React, {useMemo} from 'react';
+import { Status} from "../molecules";
 import { Icon } from "../atoms";
 import type { UIStatus } from "../../types/kanban";
 import type { Task } from "../../types/task";
 
 interface BoardContentProps {
     columns: UIStatus[];
-    onAddTask: (statusId: number, taskTitle: string) => void;
-    onDeleteTask: (statusId: number, taskId: number) => void;
+    onAddTask: (statusId: number, taskData: { title: string, description?: string }) => void;    onDeleteTask: (statusId: number, taskId: number) => void;
     onEditTask: (statusId: number, task: Task) => void;
 }
 
@@ -17,6 +16,11 @@ export const BoardContent: React.FC<BoardContentProps> = ({
                                                               onDeleteTask,
                                                               onEditTask
                                                           }) => {
+    // Dùng useMemo để tránh sort lại mỗi khi re-render nếu data không đổi
+    const sortedStatuses = useMemo(() => {
+        return [...statuses].sort((a, b) => (a.position || 0) - (b.position || 0));
+    }, [statuses]);
+
     return (
         <div className="px-8 py-6 h-full overflow-x-auto">
             {statuses.length === 0 ? (
@@ -29,17 +33,19 @@ export const BoardContent: React.FC<BoardContentProps> = ({
                 </div>
             ) : (
                 <div className="flex gap-6 pb-4 h-full">
-                    {statuses.map((status) => (
-                        <Column
-                            key={status.id}
-                            id={status.id}
-                            title={status.name} // Map Status.name vào Column.title
-                            tasks={status.tasks}
-                            onAddTask={onAddTask}
-                            onDeleteTask={onDeleteTask}
-                            onEditTask={onEditTask}
-                        />
-                    ))}
+                        {sortedStatuses.map((status) => (
+                                <Status
+                                    key={status.id}
+                                    id={status.id}
+                                    color={status.color}
+                                    title={status.name}
+                                    tasks={status.tasks}
+                                    onAddTask={onAddTask}
+                                    onDeleteTask={onDeleteTask}
+                                    onEditTask={onEditTask}
+                                />
+                            ))}
+
                 </div>
             )}
         </div>

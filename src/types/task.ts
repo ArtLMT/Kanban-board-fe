@@ -1,6 +1,4 @@
 import type {User} from "./user";
-import type {Status} from "./status.ts";
-import type {Board} from "./board.ts";
 
 export interface Task {
     id: number;
@@ -10,9 +8,6 @@ export interface Task {
     boardId?: number;
     statusId?: number;
 
-    board: Board;
-    status: Status
-
     assignee?: User;
     creator: User;
 }
@@ -21,10 +16,10 @@ export interface CreateTaskRequest {
     title: string;
     description?: string;
 
-    status: Status;
-    board: Board;
+    statusId: number;
+    boardId: number;
 
-    assignee?: User;
+    assignee?: number;
 }
 
 export interface UpdateTaskRequest {

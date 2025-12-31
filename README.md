@@ -57,7 +57,7 @@ src/
 │   │   └── index.ts           # Molecule exports
 │   │
 │   └── organisms/          # Complex page components
-│       ├── Board.tsx       # Main board container
+│       ├── BoardContent.tsx       # Main board container
 │       └── index.ts        # Organism exports
 │
 ├── api/
@@ -111,7 +111,7 @@ src/
 - Drag handle indicator
 - Hover effects
 
-### **organisms/Board.tsx**
+### **organisms/BoardContent.tsx**
 - Main board container
 - State management for boards and columns
 - Board switching logic

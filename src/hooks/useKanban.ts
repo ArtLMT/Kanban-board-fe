@@ -21,7 +21,6 @@ export const useKanban = () => {
     // Helper: Lấy board hiện tại
     const currentBoard = boards.find(b => b.id === currentBoardId);
 
-// --- 1. Fetch Danh sách Boards ---
     useEffect(() => {
         const fetchBoards = async () => {
             try {
@@ -72,15 +71,12 @@ export const useKanban = () => {
                 // MERGE DATA
                 const uiStatuses: UIStatus[] = apiStatuses.map(status => ({
                     ...status,
-                    // SỬA Ở ĐÂY: Dùng task.statusId thay vì task.status.id
-                    // (Thêm kiểm tra an toàn ? để tránh crash nếu field null)
+
                     tasks: apiTasks.filter(task => {
-                        // Ưu tiên check statusId (Backend phẳng)
-                        if (task.statusId !== undefined) {
+                        // if (task.statusId !== undefined) {
                             return task.statusId === status.id;
-                        }
-                        // Fallback check status.id (Backend lồng nhau - nếu có)
-                        return task.status?.id === status.id;
+                        // }
+                        // return task.statusId === status.id;
                     })
                 }));
 
@@ -210,19 +206,19 @@ export const useKanban = () => {
         const payload: CreateTaskRequest = {
             title: taskData.title,              // Lấy title từ object
             description: taskData.description,  // Lấy description từ object
-
-            // Backend yêu cầu gửi cả object Status và Board
-            status: {
-                id: targetStatus.id,
-                name: targetStatus.name,
-                color: targetStatus.color,
-                position: targetStatus.position,
-                board: { id: currentBoard.id, boardName: currentBoard.boardName }
-            },
-            board: {
-                id: currentBoard.id,
-                boardName: currentBoard.boardName
-            }
+            statusId: statusId,
+            boardId: currentBoard.id
+            // status: {
+            //     id: targetStatus.id,
+            //     name: targetStatus.name,
+            //     color: targetStatus.color,
+            //     position: targetStatus.position,
+            //     board: { id: currentBoard.id, boardName: currentBoard.boardName }
+            // },
+            // board: {
+            //     id: currentBoard.id,
+            //     boardName: currentBoard.boardName
+            // }
         };
 
         try {

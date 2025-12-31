@@ -1,2 +1,2 @@
-export { BoardContent } from './Board.tsx';
+export { BoardContent } from './BoardContent.tsx';
 
