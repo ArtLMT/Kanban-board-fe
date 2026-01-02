@@ -70,10 +70,9 @@ export const KanbanSidebar: React.FC<KanbanSidebarProps> = ({
                                         <p className="text-sm font-medium text-gray-900 truncate">
                                             {board.boardName} {/* Sửa .title -> .boardName */}
                                         </p>
-                                        <p className="text-xs text-gray-500">
-                                            {/* Sửa .columns -> .statuses */}
-                                            {board.statuses?.reduce((acc, status) => acc + (status.tasks?.length || 0), 0) || 0} tasks
-                                        </p>
+                                        {/*<p className="text-xs text-gray-500">*/}
+                                        {/*    {board.statuses?.reduce((acc, status) => acc + (status.tasks?.length || 0), 0) || 0} tasks*/}
+                                        {/*</p>*/}
                                     </div>
                                 )}
                             </button>

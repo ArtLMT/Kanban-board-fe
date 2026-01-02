@@ -11,7 +11,7 @@ type StatusProps = {
     tasks: Task[];
     onAddTask?: (statusId: number, taskData: { title: string, description?: string }) => void;
     onDeleteTask?: (statusId: number, taskId: number) => void;
-    onEditTask?: (statusId: number, task: Task) => void;
+    onEditTask?: (task: Task) => void;
 };
 
 export const Status = ({
@@ -37,14 +37,12 @@ export const Status = ({
     return (
         <div className="flex-shrink-0 w-80 h-fit bg-gray-100 rounded-lg p-4 border border-gray-200"
              style={{
-                 borderColor: '#e5e7eb', // Viền xung quanh nhạt
-                 borderTopColor: color || '#64748b', // Viền trên lấy theo màu status
+                 borderColor: '#e5e7eb',
+                 borderTopColor: color || '#64748b',
                  borderTopWidth: '10px'
              }}
         >
-            <div className="flex justify-between items-center mb-4"
-                 // style={{ backgroundColor: color || '#e2e8f0' }}
-            >
+            <div className="flex justify-between items-center mb-4">
                 <div>
                     <h2 className="font-bold text-lg text-gray-800">{title}</h2>
                     <p className="text-sm text-gray-500">{tasks?.length || 0} tasks</p>
@@ -82,7 +80,7 @@ export const Status = ({
                             key={task.id}
                             task={task}
                             onDelete={(taskId) => onDeleteTask?.(id, taskId)}
-                            onEdit={(updatedTask) => onEditTask?.(id, updatedTask)}
+                            onEdit={(updatedTask) => onEditTask?.(updatedTask)}
                         />
                     ))
                 )}

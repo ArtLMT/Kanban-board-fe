@@ -7,7 +7,7 @@ import type { Task } from "../../types/task";
 interface BoardContentProps {
     columns: UIStatus[];
     onAddTask: (statusId: number, taskData: { title: string, description?: string }) => void;    onDeleteTask: (statusId: number, taskId: number) => void;
-    onEditTask: (statusId: number, task: Task) => void;
+    onEditTask: (task: Task) => void;
 }
 
 export const BoardContent: React.FC<BoardContentProps> = ({

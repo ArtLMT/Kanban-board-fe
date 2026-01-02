@@ -10,7 +10,31 @@ export const KanbanPage: React.FC = () => {
     const { user, setUser } = useContext(AuthContext);
     const kanban = useKanban();
 
-    // 1. Thêm loading state để tránh lỗi khi data chưa về
+    const rawStatuses = kanban.statuses || [];
+    const rawTasks = kanban.tasks || [];
+
+    const columns = rawStatuses.map(status => {
+        const tasksInThisStatus = rawTasks.filter(t => t.statusId === status.id);
+
+        return {
+            ...status,
+            tasks: tasksInThisStatus
+        };
+    });
+
+    const boardsForSidebar = kanban.boards.map(board => {
+        if (board.id === kanban.currentBoardId) {
+            return {
+                ...board,
+                statuses: columns // chỗ này sai rồi nè
+            };
+        }
+        return board;
+    });
+
+    // const totalTasks = columns.reduce((acc, col) => acc + (col.tasks?.length || 0), 0);
+    const totalTasks = rawTasks.length;
+
     if (kanban.isLoading) {
         return <div className="p-4 text-white">Loading board data...</div>;
     }
@@ -19,11 +43,10 @@ export const KanbanPage: React.FC = () => {
     if (!kanban.currentBoard) {
         return (
             <div className="flex h-screen">
-                {/* Vẫn render Sidebar để người dùng có thể tạo board mới nếu list rỗng */}
                 <KanbanSidebar
-                    boards={kanban.boards}
+                    boards={boardsForSidebar}
                     currentBoardId={kanban.currentBoardId}
-                    sidebarOpen={kanban.sidebarOpen}
+                    sidebarOpen={kanban.isSidebarOpen}
                     setSidebarOpen={kanban.setSidebarOpen}
                     isCreatingBoard={kanban.isCreatingBoard}
                     setIsCreatingBoard={kanban.setIsCreatingBoard}
@@ -40,18 +63,11 @@ export const KanbanPage: React.FC = () => {
         );
     }
 
-    // 3. QUAN TRỌNG: Map statuses (từ API) vào biến columns (để UI cũ không bị gãy)
-    // Sau này bạn nên vào các component con đổi props 'columns' thành 'statuses' cho chuẩn
-    const columns = kanban.currentBoard.statuses || [];
-
-    // Tính tổng task (thêm optional chaining ?. để an toàn)
-    const totalTasks = columns.reduce((acc, col) => acc + (col.tasks?.length || 0), 0);
-
     const sidebarComponent = (
         <KanbanSidebar
             boards={kanban.boards}
             currentBoardId={kanban.currentBoardId}
-            sidebarOpen={kanban.sidebarOpen}
+            sidebarOpen={kanban.isSidebarOpen}
             setSidebarOpen={kanban.setSidebarOpen}
             isCreatingBoard={kanban.isCreatingBoard}
             setIsCreatingBoard={kanban.setIsCreatingBoard}
@@ -65,7 +81,6 @@ export const KanbanPage: React.FC = () => {
 
     const headerComponent = (
         <KanbanHeader
-            // Sửa .title thành .boardName
             currentBoardTitle={kanban.currentBoard.boardName}
             columns={columns}
             totalTasks={totalTasks}
@@ -89,18 +104,18 @@ export const KanbanPage: React.FC = () => {
         <ColumnManager
             columns={columns}
             // Cập nhật tên hàm mới: Status thay vì Column
-            onAddColumn={kanban.handleAddStatus}
-            onDeleteColumn={kanban.handleDeleteStatus}
-            onEditColumnTitle={kanban.handleUpdateStatus}
+            onAddColumn={kanban.addStatus}
+            onDeleteColumn={kanban.deleteStatus}
+            onEditColumnTitle={kanban.updateStatus}
         />
     );
 
     const boardContentComponent = (
         <BoardContent
             columns={columns}
-            onAddTask={kanban.handleAddTask}
-            onDeleteTask={kanban.handleDeleteTask}
-            onEditTask={kanban.handleEditTask}
+            onAddTask={kanban.addTask}
+            onDeleteTask={kanban.deleteTask}
+            onEditTask={kanban.updateTask}
         />
     );
 
