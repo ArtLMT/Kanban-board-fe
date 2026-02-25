@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client'; // Import client API
-import App from './App.tsx'; // Import component gốc của ứng dụng
+import App from './App.tsx'; // Import component gốc của ứng
+import { AuthProvider} from "./context/AuthContext.tsx";
 
 // Lấy element DOM nơi ứng dụng sẽ được mount
 const rootElement = document.getElementById('root');
@@ -16,6 +17,8 @@ if (!rootElement) {
 ReactDOM.createRoot(rootElement).render(
     // React.StrictMode giúp kiểm tra lỗi và cảnh báo trong quá trình phát triển
     <React.StrictMode>
-        <App/>
+        <AuthProvider>
+            <App/>
+        </AuthProvider>
     </React.StrictMode>,
 );

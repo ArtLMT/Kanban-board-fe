@@ -1,30 +1,30 @@
-import { useState } from 'react';
-import { validateEmail, validatePassword } from '../validation/authValidation.ts';
-import { mockAuthApi } from '../api/authAPI.ts';
+import {useContext, useState} from "react";
+import {AuthContext} from "../context/AuthContext.tsx";
+import api from "../api/api.ts";
 
 interface UseLoginProps {
     onLoginSuccess?: (username: string) => void;
 }
 
 export const useLogin = ({ onLoginSuccess }: UseLoginProps) => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [errors, setErrors] = useState<{ email?: string; password?: string }>(
-        {}
-    );
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [errors, setErrors] = useState<{ username?: string; password?: string }>({});
     const [isLoading, setIsLoading] = useState(false);
+    const { setUser } = useContext(AuthContext);
 
+
+    // Simple validation
     const validateForm = () => {
-        const newErrors: typeof errors = {
-            email: validateEmail(email),
-            password: validatePassword(password),
-        };
+        const newErrors: typeof errors = {};
 
-        Object.keys(newErrors).forEach(
-            (key) =>
-                newErrors[key as keyof typeof newErrors] === undefined &&
-                delete newErrors[key as keyof typeof newErrors]
-        );
+        if (!username.trim()) {
+            newErrors.username = "Username is required";
+        }
+
+        if (!password.trim()) {
+            newErrors.password = "Password is required";
+        }
 
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -36,31 +36,32 @@ export const useLogin = ({ onLoginSuccess }: UseLoginProps) => {
         if (!validateForm()) return;
 
         setIsLoading(true);
+
         try {
-            // Simulate API call
-            const user = await mockAuthApi.login(email, password);
-            // const username = email.split('@')[0];
-            onLoginSuccess?.(user.username);
-        } catch {
-            setErrors({ password: 'Login failed. Please try again.' });
+            await api.post("/api/auth/login", { username, password });
+
+            // cookies are set → now ask backend who we are
+            const res = await api.get("/api/auth/me");
+            setUser(res.data);
+
+            onLoginSuccess?.(res.data.username);
+            // Tokens are already in HttpOnly cookies from backend
+        } catch (err: any) {
+            console.error(err);
+            setErrors({ password: "Login failed. Please check your credentials." });
         } finally {
             setIsLoading(false);
         }
     };
 
     return {
-        // state
-        email,
+        username,
         password,
         errors,
         isLoading,
-
-        // setters
-        setEmail,
+        setUsername,
         setPassword,
         setErrors,
-
-        // handlers
         handleSubmit,
     };
 };

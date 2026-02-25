@@ -1,169 +1,59 @@
 import { useState } from "react";
-import { mockBoards, createDefaultBoard, createDefaultColumn } from "../api/mockKanbanData";
-import type { Board, Task } from "../types/kanban";
+
+import {useBoards} from "./useBoards";
+import {useBoardData} from "./useBoardData.ts";
+import type {Task} from "../types/task.ts";
 
 export const useKanban = () => {
-    const [boards, setBoards] = useState<Board[]>(mockBoards);
-    const [currentBoardId, setCurrentBoardId] = useState<string>(mockBoards[0]?.id || "");
-    const [sidebarOpen, setSidebarOpen] = useState(true);
-    const [isCreatingBoard, setIsCreatingBoard] = useState(false);
-    const [newBoardName, setNewBoardName] = useState("");
+    const boardManager = useBoards();
+    const boardDataHook = useBoardData(boardManager.currentBoardId);
 
+    const [isSidebarOpen, setSidebarOpen] = useState(true);
+    const [isTaskModalOpen, setIsTaskModalOpen] = useState(false);
 
-    const currentBoard = boards.find(b => b.id === currentBoardId);
+    // 1. Thêm state lưu task đang edit
+    const [editingTask, setEditingTask] = useState<Task | undefined>(undefined);
 
-    const handleAddTask = (columnId: string, task: Task) => {
-        setBoards(prev =>
-            prev.map(board =>
-                board.id !== currentBoardId
-                    ? board
-                    : {
-                        ...board,
-                        columns: board.columns.map(col =>
-                            col.id === columnId
-                                ? { ...col, tasks: [...col.tasks, task] }
-                                : col
-                        ),
-                    }
-            )
-        );
+    // 2. State lưu cột đang chọn để tạo mới (như cũ)
+    const [selectedStatusIdForTask, setSelectedStatusIdForTask] = useState<number | undefined>(undefined);
+
+    // Hàm mở modal tạo mới
+    const openCreateTaskModal = (statusId?: number) => {
+        setEditingTask(undefined); // Đảm bảo không có task edit
+        setSelectedStatusIdForTask(statusId);
+        setIsTaskModalOpen(true);
     };
 
-    const handleDeleteTask = (columnId: string, taskId: string) => {
-        setBoards(prev =>
-            prev.map(board =>
-                board.id !== currentBoardId
-                    ? board
-                    : {
-                        ...board,
-                        columns: board.columns.map(col =>
-                            col.id === columnId
-                                ? { ...col, tasks: col.tasks.filter(t => t.id !== taskId) }
-                                : col
-                        ),
-                    }
-            )
-        );
+    // 3. Thêm hàm mở modal edit
+    const openEditTaskModal = (task: Task) => {
+        setEditingTask(task); // Lưu task cần sửa
+        setSelectedStatusIdForTask(undefined);
+        setIsTaskModalOpen(true);
     };
 
-    const handleCreateBoard = () => {
-        if (!newBoardName.trim()) return;
-        const newBoard = createDefaultBoard(newBoardName);
-        setBoards(prev => [...prev, newBoard]);
-        setCurrentBoardId(newBoard.id);
-        setNewBoardName("");
-        setIsCreatingBoard(false);
+    const closeTaskModal = () => {
+        setIsTaskModalOpen(false);
+        setEditingTask(undefined); // Reset
+        setSelectedStatusIdForTask(undefined);
     };
-
-    const handleAddColumn = (title: string) => {
-        const newColumn = createDefaultColumn(title, currentBoardId);
-        setBoards(prev =>
-            prev.map(board =>
-                board.id === currentBoardId
-                    ? { ...board, columns: [...board.columns, newColumn] }
-                    : board
-            )
-        );
-    };
-
-    const handleEditColumnTitle = (columnId: string, newTitle: string) => {
-        setBoards(prev =>
-            prev.map(board =>
-                board.id === currentBoardId
-                    ? {
-                        ...board,
-                        columns: board.columns.map(col =>
-                            col.id === columnId ? { ...col, title: newTitle } : col
-                        )
-                    }
-                    : board
-            )
-        );
-    };
-
-    const handleDeleteColumn = (columnId: string) => {
-        setBoards(prev =>
-            prev.map(board =>
-                board.id === currentBoardId
-                    ? { ...board, columns: board.columns.filter(col => col.id !== columnId) }
-                    : board
-            )
-        );
-    };
-
-    const handleSelectBoard = (id: string) => {
-        setCurrentBoardId(id);
-    };
-
-    const handleDeleteBoard = (id: string) => {
-        const newBoards = boards.filter(b => b.id !== id);
-        setBoards(newBoards);
-        // Nếu xóa board đang chọn, chuyển về board đầu tiên nếu còn
-        if (currentBoardId === id && newBoards.length > 0) {
-            setCurrentBoardId(newBoards[0].id);
-        }
-    };
-
-    const handleClearAllTasks = () => {
-        setBoards(prev =>
-            prev.map(board =>
-                board.id === currentBoardId
-                    ? {
-                        ...board,
-                        columns: board.columns.map(col => ({ ...col, tasks: [] }))
-                    }
-                    : board
-            )
-        );
-    };
-
-    const handleEditTask = (columnId: string, task: Task) => {
-        setBoards(prev =>
-            prev.map(board =>
-                board.id !== currentBoardId
-                    ? board
-                    : {
-                        ...board,
-                        columns: board.columns.map(col =>
-                            col.id === columnId
-                                ? {
-                                    ...col,
-                                    tasks: col.tasks.map(t =>
-                                        t.id === task.id ? task : t
-                                    ),
-                                }
-                                : col
-                        ),
-                    }
-            )
-        );
-    };
-
 
     return {
-        boards,
-        currentBoard,
-        currentBoardId,
-        sidebarOpen,
-        isCreatingBoard,
-        newBoardName,
+        ...boardManager,
 
+        ...boardDataHook,
+
+        isSidebarOpen,
         setSidebarOpen,
-        setIsCreatingBoard,
-        setNewBoardName,
-        setCurrentBoardId,
 
-        handleAddTask,
-        handleDeleteTask,
-        handleClearAllTasks,
-        handleEditTask,
+        editingTask,             // Export ra để dùng
+        openCreateTaskModal,
+        openEditTaskModal,       // Export ra để dùng
+        closeTaskModal,
 
-        handleAddColumn,
-        handleEditColumnTitle,
-        handleDeleteColumn,
-        handleSelectBoard,
-        handleDeleteBoard,
-        handleCreateBoard,
+        selectedStatusIdForTask,
+        isTaskModalOpen,
 
+        isLoading: boardManager.isLoading || boardDataHook.isLoading,
+        error: boardManager.error || boardDataHook.error
     };
 };

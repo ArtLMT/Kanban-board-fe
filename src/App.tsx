@@ -1,48 +1,35 @@
-import { useState } from 'react';
-import { KanbanPage } from './pages/KanbanPage';
-import { LoginPage } from './pages/LoginPage';
-import { RegisterPage } from './pages/RegisterPage';
-
-type AuthState = 'login' | 'register' | 'authenticated';
+import { useContext, useState } from "react";
+import { AuthContext } from "./context/AuthContext";
+import { KanbanPage } from "./pages/KanbanPage";
+import { LoginPage } from "./pages/LoginPage";
+import { RegisterPage } from "./pages/RegisterPage";
 
 function App() {
-    const [authState, setAuthState] = useState<AuthState>('login');
-    const [username, setUsername] = useState<string>('');
+    const { user, loading, fetchUser } = useContext(AuthContext);
+    const [page, setPage] = useState<"login" | "register">("login");
 
-    const handleLoginSuccess = (user: string) => {
-        setUsername(user);
-        setAuthState('authenticated');
-    };
+    if (loading) {
+        return <div>Loading...</div>;
+    }
 
-    const handleRegisterSuccess = (user: string) => {
-        setUsername(user);
-        setAuthState('authenticated');
-    };
-
-    const handleLogout = () => {
-        setUsername('');
-        setAuthState('login');
-    };
-
-    if (authState === 'login') {
-        return (
+    // ✅ NOT LOGGED IN
+    if (!user) {
+        return page === "login" ? (
             <LoginPage
-                onLoginSuccess={handleLoginSuccess}
-                onSwitchToRegister={() => setAuthState('register')}
+                onSwitchToRegister={() => setPage("register")}
+                // 👇 SỬA ĐÚNG 1 DÒNG NÀY THÔI 👇
+                onLoginSuccess={async () => {
+                    // Login xong -> Gọi ngay hàm này để update State
+                    await fetchUser();
+                }}
             />
+        ) : (
+            <RegisterPage onSwitchToLogin={() => setPage("login")} />
         );
     }
 
-    if (authState === 'register') {
-        return (
-            <RegisterPage
-                onRegisterSuccess={handleRegisterSuccess}
-                onSwitchToLogin={() => setAuthState('login')}
-            />
-        );
-    }
-
-    return <KanbanPage username={username} onLogout={handleLogout} />;
+    // ✅ LOGGED IN
+    return <KanbanPage />;
 }
 
 export default App;

@@ -1,13 +1,12 @@
 import React from "react";
 import { Button, Icon } from "../atoms";
-import type { Column as ColumnType } from "../../types/kanban.ts";
+import type { UIStatus } from "../../types/kanban.ts";
 
 interface KanbanHeaderProps {
     currentBoardTitle: string;
-    columns: ColumnType[];
+    columns: UIStatus[];
     totalTasks: number;
     onClearAllTasks: () => void;
-    // Giả định có thông tin người dùng
     username: string;
     onLogout?: () => void;
 }

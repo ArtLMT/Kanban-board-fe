@@ -1,10 +1,10 @@
 import React from "react";
 import { Icon } from "../atoms";
-import type { Board as BoardType } from "../../types/kanban.ts";
+import type { UIBoard } from "../../types/kanban";
 
 interface KanbanSidebarProps {
-    boards: BoardType[];
-    currentBoardId: string;
+    boards: UIBoard[];
+    currentBoardId: number | null; // ID là number
     sidebarOpen: boolean;
     setSidebarOpen: (open: boolean) => void;
     isCreatingBoard: boolean;
@@ -12,8 +12,8 @@ interface KanbanSidebarProps {
     newBoardName: string;
     setNewBoardName: (name: string) => void;
     handleCreateBoard: () => void;
-    handleDeleteBoard: (boardId: string) => void;
-    handleSelectBoard: (boardId: string) => void;
+    handleDeleteBoard: (boardId: number) => void;
+    handleSelectBoard: (boardId: number) => void;
 }
 
 export const KanbanSidebar: React.FC<KanbanSidebarProps> = ({
@@ -70,27 +70,26 @@ export const KanbanSidebar: React.FC<KanbanSidebarProps> = ({
                                         <p className="text-sm font-medium text-gray-900 truncate">
                                             {board.title}
                                         </p>
-                                        <p className="text-xs text-gray-500">
-                                            {board.columns.reduce((acc, col) => acc + col.tasks.length, 0)} tasks
-                                        </p>
+                                        {/*<p className="text-xs text-gray-500">*/}
+                                        {/*    {board.statuses?.reduce((acc, status) => acc + (status.tasks?.length || 0), 0) || 0} tasks*/}
+                                        {/*</p>*/}
                                     </div>
                                 )}
                             </button>
-                            {boards.length > 1 && (
-                                <button
-                                    onClick={() => {
-                                        if (window.confirm(`Delete "${board.title}"?`)) {
-                                            handleDeleteBoard(board.id);
-                                        }
-                                    }}
-                                    className={`absolute -right-2 -top-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600 ${
-                                        sidebarOpen ? '' : 'hidden'
-                                    }`}
-                                    title="Delete board"
-                                >
-                                    <Icon name="x" size="sm" />
-                                </button>
-                            )}
+                            {/* Delete Button Logic */}
+                            <button
+                                onClick={() => {
+                                    if (window.confirm(`Delete "${board.title}"?`)) {
+                                        handleDeleteBoard(board.id);
+                                    }
+                                }}
+                                className={`absolute -right-2 -top-2 p-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600 ${
+                                    sidebarOpen ? '' : 'hidden'
+                                }`}
+                                title="Delete board"
+                            >
+                                <Icon name="x" size="sm" />
+                            </button>
                         </div>
                     ))}
                 </div>
