@@ -6,13 +6,14 @@ import type { Task } from "../../types/task";
 
 interface BoardContentProps {
     columns: UIStatus[];
-    onAddTask: (statusId: number, taskData: { title: string, description?: string }) => void;    onDeleteTask: (statusId: number, taskId: number) => void;
+    onOpenCreateTask: (statusId: number) => void;
+    onDeleteTask: (statusId: number, taskId: number) => void;
     onEditTask: (task: Task) => void;
 }
 
 export const BoardContent: React.FC<BoardContentProps> = ({
                                                               columns: statuses, // Alias
-                                                              onAddTask,
+                                                              onOpenCreateTask,
                                                               onDeleteTask,
                                                               onEditTask
                                                           }) => {
@@ -40,7 +41,7 @@ export const BoardContent: React.FC<BoardContentProps> = ({
                                     color={status.color}
                                     title={status.name}
                                     tasks={status.tasks}
-                                    onAddTask={onAddTask}
+                                    onAddTask={onOpenCreateTask}
                                     onDeleteTask={onDeleteTask}
                                     onEditTask={onEditTask}
                                 />

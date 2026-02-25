@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { ColumnManager, KanbanHeader, KanbanSidebar } from "../components/molecules";
+import {ColumnManager, KanbanHeader, KanbanSidebar, TaskModal} from "../components/molecules";
 import { BoardContent } from "../components/organisms/";
 import { KanbanLayout } from "../components/templates/KanbanKayout.tsx";
 import { useKanban } from "../hooks/useKanban.ts";
@@ -81,7 +81,7 @@ export const KanbanPage: React.FC = () => {
 
     const headerComponent = (
         <KanbanHeader
-            currentBoardTitle={kanban.currentBoard.boardName}
+            currentBoardTitle={kanban.currentBoard.title}
             columns={columns}
             totalTasks={totalTasks}
             // Hàm này chưa implement trong hook mới, tạm thời để trống hoặc comment
@@ -113,18 +113,51 @@ export const KanbanPage: React.FC = () => {
     const boardContentComponent = (
         <BoardContent
             columns={columns}
-            onAddTask={kanban.addTask}
+            onOpenCreateTask={(statusId) => kanban.openCreateTaskModal(statusId)}
             onDeleteTask={kanban.deleteTask}
-            onEditTask={kanban.updateTask}
+            onEditTask={(task) => kanban.openEditTaskModal(task)}
         />
     );
 
     return (
+        <>
         <KanbanLayout
             sidebar={sidebarComponent}
             header={headerComponent}
             columnManager={columnManagerComponent}
             board={boardContentComponent}
         />
+            <TaskModal
+                isOpen={kanban.isTaskModalOpen}
+                onClose={kanban.closeTaskModal}
+                statuses={kanban.statuses}
+                isLoading={kanban.isLoading}
+
+                initialStatusId={kanban.selectedStatusIdForTask}
+                task={kanban.editingTask}
+
+                onSubmit={async (data) => {
+                    if (kanban.editingTask) {
+                        await kanban.updateTask({
+                            ...kanban.editingTask,
+                            title: data.title,
+                            description: data.description,
+                            statusId: Number(data.statusId)
+                        });
+                    } else {
+                        if ('title' in data && 'statusId' in data) {
+                            await kanban.addTask(Number(data.statusId), {
+                                title: data.title,
+                                description: data.description
+                            });
+                        }
+                    }
+                    // Đóng modal sau khi xong
+                    kanban.closeTaskModal();
+                }}
+            />
+
+        </>
+
     );
 };

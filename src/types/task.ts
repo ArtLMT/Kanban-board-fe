@@ -23,9 +23,9 @@ export interface CreateTaskRequest {
 }
 
 export interface UpdateTaskRequest {
-    title?: string;
-    description?: string;
+    title: string;
+    description: string;
 
-    statusId?: number;
+    statusId: number;
     assigneeId?: number;
 }

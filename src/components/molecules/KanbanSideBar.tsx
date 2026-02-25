@@ -60,7 +60,7 @@ export const KanbanSidebar: React.FC<KanbanSidebarProps> = ({
                             <button
                                 onClick={() => handleSelectBoard(board.id)}
                                 className={`w-full text-left px-3 py-2 rounded transition-colors flex items-center gap-2 min-h-10`}
-                                title={board.boardName}
+                                title={board.title}
                             >
                                 {currentBoardId === board.id && (
                                     <div className="w-2 h-2 bg-blue-500 rounded-full flex-shrink-0"></div>
@@ -68,7 +68,7 @@ export const KanbanSidebar: React.FC<KanbanSidebarProps> = ({
                                 {sidebarOpen && (
                                     <div className="flex-1 min-w-0">
                                         <p className="text-sm font-medium text-gray-900 truncate">
-                                            {board.boardName} {/* Sửa .title -> .boardName */}
+                                            {board.title}
                                         </p>
                                         {/*<p className="text-xs text-gray-500">*/}
                                         {/*    {board.statuses?.reduce((acc, status) => acc + (status.tasks?.length || 0), 0) || 0} tasks*/}
@@ -79,7 +79,7 @@ export const KanbanSidebar: React.FC<KanbanSidebarProps> = ({
                             {/* Delete Button Logic */}
                             <button
                                 onClick={() => {
-                                    if (window.confirm(`Delete "${board.boardName}"?`)) {
+                                    if (window.confirm(`Delete "${board.title}"?`)) {
                                         handleDeleteBoard(board.id);
                                     }
                                 }}

@@ -13,31 +13,6 @@ export const useBoards = () => {
 
     const currentBoard = boards.find(b => b.id === currentBoardId);
 
-    // const fetchBoards = useCallback(async () => {
-    //     setIsLoading(true);
-    //     setError(null);
-    //     try {
-    //         const data = await boardApi.getMyBoards();
-    //
-    //         const initialUIBoards: UIBoard[] = data.map((b: any) => ({
-    //             id: b.id || b.boardId,
-    //             boardName: b.boardName || b.title || "Untitled",
-    //             statuses: []
-    //         }));
-    //
-    //         setBoards(initialUIBoards);
-    //
-    //         if (initialUIBoards.length > 0 && !currentBoardId) {
-    //             setCurrentBoardId(initialUIBoards[0].id);
-    //         }
-    //     } catch (err: any) {
-    //         console.error("Failed to fetch boards", err);
-    //         setError(err.response?.data?.message || "Failed to fetch boards");
-    //     } finally {
-    //         setIsLoading(false);
-    //     }
-    // }, [currentBoardId]);
-
     const fetchBoards = useCallback(async () => {
         setIsLoading(true);
         setError(null);
@@ -46,7 +21,7 @@ export const useBoards = () => {
 
             const initialUIBoards: UIBoard[] = data.map((b: any) => ({
                 id: b.id || b.boardId,
-                boardName: b.boardName || b.title || "Untitled",
+                title: b.title || b.title || "Untitled",
                 statuses: []
             }));
 
@@ -75,11 +50,11 @@ export const useBoards = () => {
         if (!newBoardName.trim()) return;
         setError(null);
         try {
-            const newBoardData = await boardApi.createBoard({ boardName: newBoardName });
+            const newBoardData = await boardApi.createBoard({ title: newBoardName });
 
             const newUIBoard: UIBoard = {
                 id: newBoardData.id || (newBoardData as any).boardId,
-                boardName: newBoardData.boardName || (newBoardData as any).title,
+                title: newBoardData.title || (newBoardData as any).title,
                 statuses: []
             };
 

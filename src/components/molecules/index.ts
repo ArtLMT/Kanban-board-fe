@@ -5,4 +5,6 @@ export { BoardSelector } from './BoardSelector.tsx';
 export { ColumnManager } from './ColumnManager.tsx';
 export { KanbanHeader } from './KanbanHeader.tsx';
 export { KanbanSidebar } from './KanbanSideBar.tsx';
+export { TaskModal } from './TaskModal.tsx';
+export { StatusModal } from './StatusModal.tsx';
 

@@ -1,6 +1,5 @@
-import { useState } from "react";
 import { TaskCard } from "./index.ts";
-import { AddTaskForm } from "./AddTaskForm.tsx";
+// BỎ: import { AddTaskForm } from "./AddTaskForm.tsx"; // Không dùng form inline nữa
 import { Button, Icon } from "../atoms";
 import type { Task } from "../../types/task";
 
@@ -9,7 +8,9 @@ type StatusProps = {
     title: string;
     color?: string;
     tasks: Task[];
-    onAddTask?: (statusId: number, taskData: { title: string, description?: string }) => void;
+    // SỬA: Hàm này giờ chỉ cần nhận ID cột để biết mở modal cho cột nào
+    // (Mình dùng any cho taskData tạm thời để đỡ sửa nhiều file, hoặc bạn xóa taskData đi cũng được)
+    onAddTask?: (statusId: number) => void;
     onDeleteTask?: (statusId: number, taskId: number) => void;
     onEditTask?: (task: Task) => void;
 };
@@ -23,16 +24,11 @@ export const Status = ({
                            onDeleteTask,
                            onEditTask
                        }: StatusProps) => {
-    const [isAddingTask, setIsAddingTask] = useState(false);
+    // BỎ: State quản lý form nội bộ
+    // const [isAddingTask, setIsAddingTask] = useState(false);
 
-    const handleAddTaskSubmit = (formData: { title: string; description: string }) => {
-        onAddTask?.(id, {
-            title: formData.title,
-            description: formData.description || undefined
-        });
-
-        setIsAddingTask(false);
-    };
+    // BỎ: Hàm xử lý submit nội bộ
+    // const handleAddTaskSubmit = ...
 
     return (
         <div className="flex-shrink-0 w-80 h-fit bg-gray-100 rounded-lg p-4 border border-gray-200"
@@ -47,27 +43,29 @@ export const Status = ({
                     <h2 className="font-bold text-lg text-gray-800">{title}</h2>
                     <p className="text-sm text-gray-500">{tasks?.length || 0} tasks</p>
                 </div>
-                {!isAddingTask && (
-                    <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => setIsAddingTask(true)}
-                        className="p-2"
-                        title="Add task"
-                    >
-                        <Icon name="plus" size="md" />
-                    </Button>
-                )}
+
+                {/* SỬA NÚT ADD: Bấm cái là gọi onAddTask ngay */}
+                <Button
+                    variant="ghost"
+                    size="sm"
+                    // onClick={() => {
+                    //     // Gọi hàm này để báo cho BoardContent -> KanbanPage biết là cần mở Modal
+                    //     if (onAddTask) {
+                    //         onAddTask(id);
+                    //     }
+                    // }}
+                    onClick={() => {
+                        onAddTask?.(id)}
+                    }
+                    className="p-2"
+                    title="Add task"
+                >
+                    <Icon name="plus" size="md" />
+                </Button>
             </div>
 
-            {isAddingTask && (
-                <div className="mb-4">
-                    <AddTaskForm
-                        onAddTask={handleAddTaskSubmit}
-                        onCancel={() => setIsAddingTask(false)}
-                    />
-                </div>
-            )}
+            {/* BỎ: Khu vực render AddTaskForm */}
+            {/* {isAddingTask && (...)} */}
 
             <div className="space-y-2 min-h-[100px] max-h-[70vh] overflow-y-auto pr-2 custom-scrollbar">
                 {(!tasks || tasks.length === 0) ? (

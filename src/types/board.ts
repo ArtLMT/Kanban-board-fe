@@ -1,13 +1,13 @@
 
 export interface Board {
     id: number;
-    boardName: string;
+    title: string;
 }
 
 export interface CreateBoardRequest {
-    boardName: string;
+    title: string;
 }
 
 export interface UpdateBoardRequest {
-    boardName?: string;
+    title?: string;
 }
